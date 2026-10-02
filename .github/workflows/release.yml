@@ -68,7 +68,7 @@ jobs:
 
       - name: Verify the signature of the published Docker image
         env:
-          IDENTITY: "https://github.com/Snoofy26/shepherd/.github/workflows/release.yml@.*"
+          IDENTITY: "https://github.com/snoofy26/shepherd/.github/workflows/release.yml@.*"
           OIDC_ISSUER: https://token.actions.githubusercontent.com
         run: >
           echo "${{ steps.meta.outputs.tags }}" | xargs -I {}
