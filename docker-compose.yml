@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   app:
     build: .
@@ -9,15 +7,38 @@ services:
       # With KEY: 'VALUE', quotes are part of yaml syntax and thus get stripped
       # but with KEY='VALUE', they are part of the value and stay there,
       # causing problems!
-      TZ: 'US/Eastern'
-      SLEEP_TIME: '5m'
-      FILTER_SERVICES: ''
-      VERBOSE: 'true'
-      #UPDATE_OPTIONS: '--update-delay=30s'
-      #ROLLBACK_OPTIONS: '--rollback-delay=0s'
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - TZ=Europe/Paris
+      - FILTER_SERVICES=label=com.centurylinklabs.shepherd.enable=true
+      - IMAGE_AUTOCLEAN_LIMIT=2
+      - ROLLBACK_ON_FAILURE=true
+      - RUN_ONCE_AND_EXIT=true
+      - REGISTRY_USER=snoofy26
+      - REGISTRY_PASSWORD_FILE=/var/run/secrets/shepherd_registry_password
+      #- APPRISE_SIDECAR_URL=tasks.apprise_notify:5000
+      #- VERBOSE=true
+      #- UPDATE_OPTIONS=--update-delay=30s
+      #- ROLLBACK_OPTIONS=--rollback-delay=0s
+    secrets:
+        - shepherd_registry_password
+    networks:
+      - notification
     deploy:
+      replicas: 0
+      restart_policy:
+        condition: none
       placement:
         constraints:
           - node.role == manager
+      labels:
+        - swarm.cronjob.enable=true
+        - swarm.cronjob.schedule=0 0 4 * * 1
+        - swarm.cronjob.skip-running=true
+        - system-prune=false
+      
+secrets:
+    shepherd_registry_password:
+      external: true
+      
+#networks:
+#    notification:
+#        external: true
