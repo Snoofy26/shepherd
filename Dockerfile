@@ -1,4 +1,4 @@
-FROM docker:28
+FROM docker:29.8.2-cli-alpine3.24
 
 ENV SLEEP_TIME='5m'
 ENV FILTER_SERVICES=''
