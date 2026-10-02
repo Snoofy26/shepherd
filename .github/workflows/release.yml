@@ -54,7 +54,7 @@ jobs:
             ghcr.io/${{ env.IMAGE_NAME }}
             ${{ env.IMAGE_NAME }}
             tags: |
-              type=raw,value=patched
+              type=ref,event=branch
               type=sha
 
       # Build and push Docker image with Buildx
